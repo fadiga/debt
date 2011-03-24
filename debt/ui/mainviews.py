@@ -3,7 +3,7 @@
 # maintainer : Fad
 
 import sys
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 from menubar import MenuBar
 
 
@@ -15,13 +15,14 @@ class MainWindows(QtGui.QMainWindow):
         #~ self.setGeometry(300, 300, 250, 150)
         self.setWindowTitle('Principale')
         self.setWindowIcon(QtGui.QIcon('icons/fad.png'))
-        
+
         self.menubar = MenuBar(self)
         self.setMenuBar(self.menubar)
-        
+        self.initUI()
+
     def closeEvent(self, event):
         reply = QtGui.QMessageBox.question(self, 'Message',
-            "Are you sure to quit?", QtGui.QMessageBox.Yes | 
+            "Are you sure to quit?", QtGui.QMessageBox.Yes |
             QtGui.QMessageBox.No, QtGui.QMessageBox.No)
 
         if reply == QtGui.QMessageBox.Yes:
@@ -29,4 +30,18 @@ class MainWindows(QtGui.QMainWindow):
         else:
             event.ignore()
 
+    def initUI(self):
+        self.cal = QtGui.QCalendarWidget(self)
+        self.cal.setGridVisible(True)
+        self.cal.move(20, 30)
+        self.cal.setGeometry(5, 30, 300, 200)
+        self.connect(self.cal, QtCore.SIGNAL('selectionChanged()'), self.showDate)
 
+        self.label = QtGui.QLabel(self)
+        date = self.cal.selectedDate()
+        self.label.setText(str(date.toPyDate()))
+        self.label.move(130, 260)
+
+    def showDate(self):
+        date = self.cal.selectedDate()
+        self.label.setText(str(date.toPyDate()))
