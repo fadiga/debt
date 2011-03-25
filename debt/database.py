@@ -67,8 +67,8 @@ class Creditor(object):
 
 class Debt(object):
 
-    def __init__(self, amount_debt, start_date, end_date,\
-                designation, creditor=None):
+    def __init__(self, designation, amount_debt, start_date, end_date,\
+                creditor=None):
         self.creditor = creditor
         self.designation = designation
         self.amount_debt = amount_debt

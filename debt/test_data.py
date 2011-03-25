@@ -10,11 +10,15 @@ end_date = datetime(2011, 03, 31)
 
 
 c = Creditor("Madou", "Fofana", "Boulcity", "6712132")
-d = Debt(1200000, start_date, end_date)
+d = Debt("1 Moto ktm", 1200000, start_date, end_date)
 d.creditor = c
 
 op = Operation(50000)
 op.debt = d
-
-session.add_all((c, d, op))
-session.commit()
+try:
+    session.add_all((c, d, op))
+    session.commit()
+    print "YES"
+except:
+    session.rollback()
+    print "oh no"
