@@ -33,6 +33,7 @@ creditors_table = Table('creditor', metadata,
 debts_table = Table('debt', metadata,
     Column('id', Integer, primary_key=True),
     Column('creditor_id', Integer, ForeignKey('creditor.id')),
+    Column('Designation', Unicode(100)),
     Column('amount_debt', Integer),
     Column('start_date', Date),
     Column('end_date', Date),
@@ -66,15 +67,17 @@ class Creditor(object):
 
 class Debt(object):
 
-    def __init__(self, amount_debt, start_date, end_date, creditor=None):
+    def __init__(self, amount_debt, start_date, end_date,\
+                designation, creditor=None):
         self.creditor = creditor
+        self.designation = designation
         self.amount_debt = amount_debt
         self.start_date = start_date
         self.end_date = end_date
 
     def __reper__(object):
-        return ("<Debt('%(creditor)s')>,'%(amount_debt)s')>") %\
-                {'amount_debt': self.amount_debt}
+        return ("<Debt('%(designation)s')>,'%(amount_debt)s')>") %\
+                {'designation':designation,'amount_debt': self.amount_debt}
 
     def __unicde__(self):
         return (u"%(creditor)s %(amount_debt)s") % {'creditor': self.creditor,\

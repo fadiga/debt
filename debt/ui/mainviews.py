@@ -45,3 +45,12 @@ class MainWindows(QtGui.QMainWindow):
     def showDate(self):
         date = self.cal.selectedDate()
         self.label.setText(str(date.toPyDate()))
+        self.title = setWindowTitle("Account's Summary.")
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(self.title)
+        self.setLayout(vbox)
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    qb = MainWindows()
+    qb.show()
+    sys.exit(app.exec_())
