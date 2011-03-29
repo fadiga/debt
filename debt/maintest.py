@@ -4,6 +4,7 @@
 
 import sys
 
+from gettext import gettext as _
 from PyQt4 import QtCore, QtGui
 
 from ui.mainviews import MainWindows
