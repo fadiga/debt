@@ -49,7 +49,7 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         self.parent = parent
 
         self.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.setGeometry(150, 30, 300, 200)
+
         self.cellClicked.connect(self.click_item)
 
         self.verticalHeader().setVisible(False)

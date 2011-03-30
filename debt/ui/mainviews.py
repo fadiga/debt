@@ -12,7 +12,6 @@ class MainWindows(QtGui.QMainWindow):
         QtGui.QMainWindow.__init__(self)
 
         self.resize(900, 650)
-        #~ self.setGeometry(300, 300, 250, 150)
         self.setWindowTitle('Principale')
         self.setWindowIcon(QtGui.QIcon('icons/fad.png'))
 
