@@ -5,7 +5,7 @@
 from gettext import gettext as _
 from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
-MAIN_WIDGET_SIZE = 900
+MAIN_WIDGET_SIZE = 1200
 
 class DebtPageTitle(QtGui.QLabel):
 
@@ -41,6 +41,7 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         QtGui.QTableWidget.__init__(self, parent=parent, *args, **kwargs)
 
         self._data = []
+        self._title = []
         self._header = []
         self._display_total = False
         self._column_totals = {}
