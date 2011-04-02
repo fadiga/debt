@@ -43,7 +43,7 @@ operations_table = Table('operation', metadata,
     Column('id', Integer, primary_key=True),
     Column('debt_id', Integer, ForeignKey('debt.id')),
     Column('amount_paid', Integer),
-    Column('registered_on', Date, nullable=True),
+    Column('registered_on', DateTime, nullable=True),
 )
 
 metadata.create_all(engine)

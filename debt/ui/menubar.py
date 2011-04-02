@@ -7,8 +7,9 @@ from gettext import gettext as _
 
 
 from common import DebtWidget
-
-
+from operationview import OperationViewWidget
+from dashbord import DashbordViewWidget
+from debtview import DebtViewWidget
 class MenuBar(QtGui.QMenuBar, DebtWidget):
 
     def __init__(self, parent=None, *args, **kwargs):
@@ -45,10 +46,13 @@ class MenuBar(QtGui.QMenuBar, DebtWidget):
         file.addAction(exit)
         # Menu go to
         goto = self.addMenu(_(u"&Go to"))
-        goto.addAction(_(u"Dashbord"),\
-                                    self.goto_dashbord)
         goto.addAction(_(u"Add Statement"),\
                                        self.goto_add_statement)
+        goto.addAction(_(u"Add Debt"),\
+                                       self.goto_add_debt)
+        goto.addAction(_(u"Dashbord"),\
+                                    self.goto_dashbord)
+
         #Menu help
         help = self.addMenu(_(u"Help"))
         help.addAction(_(u"About"), self.goto_about)
@@ -58,8 +62,10 @@ class MenuBar(QtGui.QMenuBar, DebtWidget):
         print u'print'
 
     def goto_add_statement(self):
-        print 'add statement'
-        #~ self.change_main_context(AddstatementViewWidget)
+        self.open_dialog(OperationViewWidget, modal=True)
+
+    def goto_add_debt(self):
+        self.open_dialog(DebtViewWidget, modal=True)
 
     #Delete an operation.
     def goto_delete_statement(self):

@@ -17,7 +17,7 @@ class MainWindows(QtGui.QMainWindow):
 
         self.menubar = MenuBar(self)
         self.setMenuBar(self.menubar)
-        
+
         self.change_context(DashbordViewWidget)
     # pour changer les pages
     def change_context(self, context_widget, *args, **kwargs):
@@ -41,6 +41,10 @@ class MainWindows(QtGui.QMainWindow):
         else:
             event.ignore()
 
+    def open_dialog(self, dialog, modal=False, *args, **kwargs):
+        d = dialog(parent=self, *args, **kwargs)
+        d.setModal(modal)
+        d.exec_()
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
