@@ -10,6 +10,9 @@ from common import DebtWidget
 from operationview import OperationViewWidget
 from dashbord import DashbordViewWidget
 from debtview import DebtViewWidget
+from addcreditorview import CreditorViewWidget
+
+
 class MenuBar(QtGui.QMenuBar, DebtWidget):
 
     def __init__(self, parent=None, *args, **kwargs):
@@ -50,6 +53,8 @@ class MenuBar(QtGui.QMenuBar, DebtWidget):
                                        self.goto_add_statement)
         goto.addAction(_(u"Add Debt"),\
                                        self.goto_add_debt)
+        goto.addAction(_(u"Add creditor"),\
+                                       self.goto_add_creditor)
         goto.addAction(_(u"Dashbord"),\
                                     self.goto_dashbord)
 
@@ -66,6 +71,9 @@ class MenuBar(QtGui.QMenuBar, DebtWidget):
 
     def goto_add_debt(self):
         self.open_dialog(DebtViewWidget, modal=True)
+
+    def goto_add_creditor(self):
+        self.open_dialog(CreditorViewWidget, modal=True)
 
     #Delete an operation.
     def goto_delete_statement(self):

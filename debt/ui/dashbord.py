@@ -12,11 +12,11 @@ class DashbordViewWidget(DebtWidget):
     def __init__(self, parent=0, *args, **kwargs):
         super(DashbordViewWidget, self).__init__(parent=parent,
                                                         *args, **kwargs)
-        self.title = DebtPageTitle(u"Dashbord")        
+        self.title = DebtPageTitle(u"Dashbord")
         self.table = DebtsTableWidget(parent=self)
         self.table1 = OperationTableWidget(parent=self)
         self.table3 = AlertTableWidget(parent=self)
-        
+
         #Calandar
         self.vbox = QtGui.QVBoxLayout(self)
 
@@ -42,10 +42,10 @@ class DashbordViewWidget(DebtWidget):
         splitter.addWidget(self.cal)
         splitter.addWidget(self.table)
         splitter.addWidget(self.table1)
-        
+
         splitter1 = QtGui.QSplitter(QtCore.Qt.Vertical)
         splitter1.addWidget(self.table3)
-        
+
         splitter2 = QtGui.QSplitter(QtCore.Qt.Vertical)
         splitter2.addWidget(self.title)
         splitter2.addWidget(splitter)
@@ -53,7 +53,7 @@ class DashbordViewWidget(DebtWidget):
 
         self.vbox.addWidget(splitter2)
         self.setLayout(self.vbox)
-        
+
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
 
     def showDate(self):
@@ -66,14 +66,18 @@ class DebtsTableWidget(DebtTableWidget):
     def __init__(self, parent, *args, **kwargs):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [_(u"last_name"), _(u"first_name"), \
-                        _(u"phone")]
+        self.header = [_(u"first_name"), _(u"Designation"), \
+                        _(u"Amount"), _(u"End date")]
         self.set_data_for()
         self.refresh(True)
 
+
     def set_data_for(self):
-        self.data = [(op.first_name, op.last_name, op.phone)
-            for op in session.query(Creditor).all()]
+        debts = session.query(Debt).all()
+        if len(debts) > 0:
+            self.data = [(db.creditor.first_name, db.designation,\
+                            db.amount_debt, db.end_date) for db in \
+                            session.query(Debt).all()]
 
 
 class OperationTableWidget(DebtTableWidget):
@@ -86,11 +90,14 @@ class OperationTableWidget(DebtTableWidget):
         self.set_data_for()
         self.refresh(True)
 
+
     def set_data_for(self):
-        self.data = [(op.debt.creditor.last_name, \
-        op.debt.creditor.first_name, op.amount_paid)
-            for op in session.query(Operation).all()]
-            
+        operations = session.query(Operation).all()
+        if len(operations) > 0:
+            self.data = [(op.debt.creditor.last_name, \
+            op.debt.creditor.first_name, op.amount_paid)
+                for op in operations]
+
 class AlertTableWidget(DebtTableWidget):
 
     def __init__(self, parent, *args, **kwargs):

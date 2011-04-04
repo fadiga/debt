@@ -29,50 +29,74 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
         self.endtime = QtGui.QDateTimeEdit(QtCore.QTime.currentTime())
         self.endtime.setDisplayFormat("hh:mm")
         self.amount = QtGui.QLineEdit()
+        self.amount.setValidator(QtGui.QIntValidator())
 
-        #~ self.label.move(130, 100)
         #Combobox widget
-        self.box_type = QtGui.QComboBox()
-        self.data_creditor = session.query(Creditor).all()
+        self.box_creditor = QtGui.QComboBox()
 
+        self.data_creditor = session.query(Creditor).all()
         for index in xrange(0, len(self.data_creditor)):
             creditor = self.data_creditor[index]
-            self.box_type.addItem((u'%(last_name)s %(first_name)s tel : %(phone)s') %\
+            self.box_creditor.addItem((u'%(last_name)s %(first_name)s tel : %(phone)s') %\
                             {'last_name': creditor.last_name,\
                              "first_name":creditor.first_name,\
                              "phone":creditor.phone})
+        desbox = QtGui.QFormLayout()
+        desbox.addRow("Designation", self.des)
+
         formboxleft = QtGui.QFormLayout()
-        formboxleft.addRow("Creditor", self.box_type)
-        formboxleft.addRow("Designation", self.des)
+        formboxleft.addRow("Creditor", self.box_creditor)
         formboxleft.addRow("Amount", self.amount)
         formboxright = QtGui.QFormLayout()
         formboxright.addRow("Start date", self.startdate)
-        formboxright.addRow("Start time", self.starttime)
         formboxright.addRow("End date", self.enddate)
-        formboxright.addRow("End time", self.endtime)
+        formbox = QtGui.QFormLayout()
+        formbox.addRow("Time", self.starttime)
+        formbox.addRow("Time", self.endtime)
 
         button_hbox = QtGui.QHBoxLayout()
         butt = QtGui.QPushButton((u"Add"))
-        butt.clicked.connect(self.add_operation)
+        butt.clicked.connect(self.add_debt)
         cancel_but = QtGui.QPushButton((u"Cancel"))
         cancel_but.clicked.connect(self.cancel)
         button_hbox.addWidget(butt)
         button_hbox.addWidget(cancel_but)
-        cancel_but.move(30, 10)
+
         hbox = QtGui.QHBoxLayout()
         hbox.addLayout(formboxleft)
         hbox.addLayout(formboxright)
+        hbox.addLayout(formbox)
 
         vbox = QtGui.QVBoxLayout()
         vbox.addWidget(self.title)
+        vbox.addLayout(desbox)
         vbox.addLayout(hbox)
         vbox.addLayout(button_hbox)
-
         self.setLayout(vbox)
 
     def cancel(self):
         self.close()
 
-    def add_operation(self):
+    def add_debt(self):
         ''' add operation '''
-        pass
+        day, month, year = self.startdate.text().split('-')
+        hour, minute = self.starttime.text().split(':')
+        start_datetime = datetime(int(year), int(month),\
+                                  int(day), int(hour), int(minute))
+        day, month, year = self.enddate.text().split('-')
+        hour, minute = self.endtime.text().split(':')
+        end_datetime = datetime(int(year), int(month),\
+                                int(day), int(hour), int(minute))
+        if self.des and self.starttime and self.startdate\
+                        and self.box_creditor and self.enddate\
+                        and self.endtime and self.amount:
+            print unicode(self.des.text())
+            debt = Debt(unicode(self.des.text()), self.amount.text(),\
+                                            start_datetime, end_datetime)
+            #~ debt = Debt("1 Moto ktm", 325000, datetime(2010, 10, 01,10,50),datetime(2011, 11, 20,18,20))
+            debt.creditor = self.data_creditor[self.box_creditor.currentIndex()]
+            session.add(debt)
+            session.commit()
+            self.des.clear()
+            self.amount.clear()
+            self.change_main_context(DashbordViewWidget)

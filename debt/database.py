@@ -14,7 +14,7 @@ from sqlalchemy import Table, Column, Integer, String, \
 
 DB_FILE = 'debt.db'
 
-engine = create_engine('sqlite:///%s' % DB_FILE, echo=True)
+engine = create_engine('sqlite:///%s' % DB_FILE, echo=False)
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -35,8 +35,8 @@ debts_table = Table('debt', metadata,
     Column('creditor_id', Integer, ForeignKey('creditor.id')),
     Column('Designation', Unicode(100)),
     Column('amount_debt', Integer),
-    Column('start_date', Date),
-    Column('end_date', Date),
+    Column('start_date', DateTime),
+    Column('end_date', DateTime),
 )
 
 operations_table = Table('operation', metadata,
@@ -51,7 +51,7 @@ metadata.create_all(engine)
 
 class Creditor(object):
 
-    def __init__(self, first_name, last_name, adress, phone):
+    def __init__(self, first_name, last_name, adress=None, phone=None):
         self.first_name = first_name
         self.last_name = last_name
         self.adress = adress
@@ -100,7 +100,7 @@ class Operation(object):
     def __unicode__(self):
         return (u"%(debt)s %(date)s: %(amount_paid)s") % {'debt': self.debt,\
                   'amount_paid': self.amount_paid, \
-                  'registered_on': self.amount_date.strftime('%F')}
+                  'registered_on': self.amount_date.strftime('%x')}
 
 
 mapper(Creditor, creditors_table, properties={
