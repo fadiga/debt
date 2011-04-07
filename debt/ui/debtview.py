@@ -90,8 +90,7 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
         if self.des and self.starttime and self.startdate\
                         and self.box_creditor and self.enddate\
                         and self.endtime and self.amount:
-            print unicode(self.des.text())
-            debt = Debt(unicode(self.des.text()), self.amount.text(),\
+            debt = Debt(unicode(self.des.text()), unicode(self.amount.text()),\
                                             start_datetime, end_datetime)
             #~ debt = Debt("1 Moto ktm", 325000, datetime(2010, 10, 01,10,50),datetime(2011, 11, 20,18,20))
             debt.creditor = self.data_creditor[self.box_creditor.currentIndex()]

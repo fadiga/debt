@@ -84,7 +84,6 @@ class OperationViewWidget(QtGui.QDialog, DebtWidget):
             operation = Operation(unicode(self.value_.text()), \
                             datetime_,\
                             self.data_debt[self.box_type.currentIndex()])
-            print operation
             session.add(operation)
             session.commit()
             self.value_.clear()

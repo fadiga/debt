@@ -23,17 +23,17 @@ metadata = MetaData()
 
 creditors_table = Table('creditor', metadata,
     Column('id', Integer, primary_key=True),
-    Column('last_name', Unicode(100)),
-    Column('first_name', Unicode(100)),
-    Column('adress', Unicode(100)),
-    Column('phone', Unicode(10)),
+    Column('last_name', String(20)),
+    Column('first_name', String(20)),
+    Column('adress', String(20)),
+    Column('phone', String(20)),
 )
 
 
 debts_table = Table('debt', metadata,
     Column('id', Integer, primary_key=True),
     Column('creditor_id', Integer, ForeignKey('creditor.id')),
-    Column('Designation', Unicode(100)),
+    Column('designation', String(20)),
     Column('amount_debt', Integer),
     Column('start_date', DateTime),
     Column('end_date', DateTime),
@@ -51,7 +51,7 @@ metadata.create_all(engine)
 
 class Creditor(object):
 
-    def __init__(self, first_name, last_name, adress=None, phone=None):
+    def __init__(self, first_name, last_name, adress="", phone=""):
         self.first_name = first_name
         self.last_name = last_name
         self.adress = adress
@@ -62,18 +62,19 @@ class Creditor(object):
         {'first_name': self.first_name}
 
     def __unicode__(self):
-        return (u"%(last_name)s") % {'name': self.last_name}
+        return (u"%(last_name)s (first_name)s") % {'last_name': self.last_name,\
+                                        'first_name': self.first_name}
 
 
 class Debt(object):
 
     def __init__(self, designation, amount_debt, start_date, end_date,\
                 creditor=None):
-        self.creditor = creditor
         self.designation = designation
         self.amount_debt = amount_debt
         self.start_date = start_date
         self.end_date = end_date
+        self.creditor = creditor
 
     def __reper__(object):
         return ("<Debt('%(designation)s')>,'%(amount_debt)s')>") %\
