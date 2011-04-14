@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# maintainer: alou
+# maintainer: Fad
 
 from PyQt4 import QtGui, QtCore
 from database import *
@@ -13,22 +13,17 @@ class DashbordViewWidget(DebtWidget):
         super(DashbordViewWidget, self).__init__(parent=parent,
                                                         *args, **kwargs)
         self.title = DebtPageTitle(u"Dashbord")
-        self.table = DebtsTableWidget(parent=self)
-        self.table1 = OperationTableWidget(parent=self)
-        self.table3 = AlertTableWidget(parent=self)
+        self.table_debts = DebtsTableWidget(parent=self)
+        self.table_alert = AlertTableWidget(parent=self)
 
-        #Calandar
         self.vbox = QtGui.QVBoxLayout(self)
 
+        #Calandar
         self.cal = QtGui.QCalendarWidget(self)
         self.cal.setGridVisible(True)
-        #~ self.cal.move(20, 30)
-        #~ self.cal.setGeometry(0, 0, 10, 10)
         self.connect(self.cal, QtCore.SIGNAL('selectionChanged()'), self.showDate)
         self.label = QtGui.QLabel(self)
         date = self.cal.selectedDate()
-        self.label.setText(str(date.toPyDate()))
-        self.label.move(130, 560)
         #--------------------
 
         topleft = QtGui.QFrame(self)
@@ -37,21 +32,22 @@ class DashbordViewWidget(DebtWidget):
         topright = QtGui.QFrame(self)
         topright.setFrameShape(QtGui.QFrame.StyledPanel)
 
-        splitter = QtGui.QSplitter(QtCore.Qt.Horizontal)
-        splitter.addWidget(self.title)
-        splitter.addWidget(self.cal)
-        splitter.addWidget(self.table)
-        splitter.addWidget(self.table1)
+        splitter_left = QtGui.QSplitter(QtCore.Qt.Horizontal)
+        splitter_left.addWidget(self.cal)
+        splitter_left.resize(10, 50)
+        splitter_left.addWidget(self.table_debts)
 
-        splitter1 = QtGui.QSplitter(QtCore.Qt.Vertical)
-        splitter1.addWidget(self.table3)
 
-        splitter2 = QtGui.QSplitter(QtCore.Qt.Vertical)
-        splitter2.addWidget(self.title)
-        splitter2.addWidget(splitter)
-        splitter2.addWidget(splitter1)
+        splitter_down = QtGui.QSplitter(QtCore.Qt.Vertical)
+        splitter_down.addWidget(self.table_alert)
+        splitter_down.resize(900, 650)
 
-        self.vbox.addWidget(splitter2)
+        splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+        splitter.addWidget(splitter_left)
+        splitter.addWidget(splitter_down)
+
+        self.vbox.addWidget(self.title)
+        self.vbox.addWidget(splitter)
         self.setLayout(self.vbox)
 
         QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
@@ -59,7 +55,8 @@ class DashbordViewWidget(DebtWidget):
     def showDate(self):
         date = self.cal.selectedDate()
         self.label.setText(str(date.toPyDate()))
-        self.setLayout(self.vbox)
+        self.label.move(180, 25)
+        #~ print str(date.toPyDate()),"date"
 
 class DebtsTableWidget(DebtTableWidget):
 
@@ -67,7 +64,8 @@ class DebtsTableWidget(DebtTableWidget):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
         self.header = [_(u"first_name"), _(u"Designation"), \
-                        _(u"Amount"), _(u"End date")]
+                        _(u"Amount"), _(u"End date"), \
+                        _(u"Go")]
         self.set_data_for()
         self.refresh(True)
 
@@ -78,6 +76,23 @@ class DebtsTableWidget(DebtTableWidget):
             self.data = [(db.creditor.first_name, db.designation,\
                             db.amount_debt, db.end_date) for db in \
                             session.query(Debt).all()]
+
+    def _item_for_data(self, row, column, data, context=None):
+        if column == self.data[0].__len__() + 1:
+            return QtGui.QTableWidgetItem(QtGui.QIcon("icons/go-next.png"), \
+                                          _(u"Operations"))
+        return super(DebtsTableWidget, self)\
+                                    ._item_for_data(row, column, data, context)
+
+    def click_item(self, row, column, *args):
+        last_column = self.header.__len__() + 1
+        if column != last_column:
+            return
+        try:
+            self.parent.change_main_context(OperationTableWidget, \
+                                        account=self.data[row][last_column])
+        except IndexError:
+            pass
 
 
 class OperationTableWidget(DebtTableWidget):
@@ -105,11 +120,11 @@ class AlertTableWidget(DebtTableWidget):
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
         self.header = [_(u"last_name"), _(u"first_name"), \
                         _(u"Amount paid")]
+        self._title = [_("fad")]
         self.set_data_for()
         self.refresh(True)
 
     def set_data_for(self):
-        #~ self.data = [(op.debt.creditor.last_name, \
-        #~ op.debt.creditor.first_name, op.amount_paid)
-            #~ for op in session.query(Operation).all()]
-        pass
+        self.data = [(op.debt.creditor.last_name, \
+        op.debt.creditor.first_name, op.amount_paid)
+            for op in session.query(Operation).all()]

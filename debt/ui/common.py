@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding=utf-8
-# maintainer: alou
+# maintainer: Fad
 
 from gettext import gettext as _
 from PyQt4 import QtGui
@@ -65,10 +65,10 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         self._data = value
 
     def getdata(self):
+        print self._data
         return self._data
 
     data = property(getdata, setdata)
-
     def setheader(self, value):
         if not isinstance(value, (list, None.__class__)):
             raise ValueError
@@ -78,6 +78,15 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         return self._header
 
     header = property(getheader, setheader)
+    def settitle(self, value):
+        if not isinstance(value, (list, None.__class__)):
+            raise ValueError
+        self._title = value
+
+    def gettitle(self):
+        return self._title
+
+    title_ = property(gettitle, settitle)
 
     def _reset(self):
         for index in range(self.rowCount(), -1, -1):
@@ -92,6 +101,7 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         if self._display_total:
             rc += 1
         self.setRowCount(rc)
+        self.setHorizontalHeaderLabels(self.title_)
         self.setColumnCount(self.header.__len__())
         self.setHorizontalHeaderLabels(self.header)
 
