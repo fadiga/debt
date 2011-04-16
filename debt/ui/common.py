@@ -7,12 +7,14 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 MAIN_WIDGET_SIZE = 1200
 
+
 class DebtPageTitle(QtGui.QLabel):
 
     def __init__(self, *args, **kwargs):
         super(DebtPageTitle, self).__init__(*args, **kwargs)
         self.setFont(QtGui.QFont("Times New Roman", 18))
         self.setAlignment(Qt.AlignCenter)
+
 
 class DebtWidget(QtGui.QWidget):
 
@@ -65,7 +67,6 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         self._data = value
 
     def getdata(self):
-        print self._data
         return self._data
 
     data = property(getdata, setdata)

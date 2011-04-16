@@ -6,6 +6,7 @@
 from datetime import datetime
 
 from PyQt4 import QtGui, QtCore
+from sqlalchemy import desc
 
 from database import *
 from dashbord import DashbordViewWidget
@@ -30,11 +31,10 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
         self.endtime.setDisplayFormat("hh:mm")
         self.amount = QtGui.QLineEdit()
         self.amount.setValidator(QtGui.QIntValidator())
-
         #Combobox widget
         self.box_creditor = QtGui.QComboBox()
 
-        self.data_creditor = session.query(Creditor).all()
+        self.data_creditor = session.query(Creditor).order_by(desc(Creditor.id)).all()
         for index in xrange(0, len(self.data_creditor)):
             creditor = self.data_creditor[index]
             self.box_creditor.addItem((u'%(last_name)s %(first_name)s tel : %(phone)s') %\

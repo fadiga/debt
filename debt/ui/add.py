@@ -3,6 +3,7 @@
 #maintainer: Fad
 
 from PyQt4 import QtGui, QtCore
+from sqlalchemy import desc
 
 from database import *
 from dashbord import DashbordViewWidget
@@ -21,15 +22,14 @@ class addViewWidget(QtGui.QDialog, DebtWidget):
 
         #Combobox widget
         self.box_type = QtGui.QComboBox()
-        self.data_debt = session.query(Debt).all()
+        self.data_creditor = session.query(Creditor).order_by(desc(Creditor.id)).all()
         self.box_type.addItem(u"Nouveau")
-        for index in xrange(0, len(self.data_debt)):
-            debt = self.data_debt[index]
-            self.box_type.addItem((u'%(last_name)s %(first_name)s pour%(des)s le %(date)s') %\
-                            {'last_name': debt.creditor.last_name,\
-                             "first_name":debt.creditor.first_name,\
-                             "des":debt.amount_debt,\
-                             "date":debt.start_date})
+        for index in xrange(0, len(self.data_creditor)):
+            creditor = self.data_creditor[index]
+            self.box_type.addItem((u"%(last_name)s %(first_name)s pour%(phone)s") %\
+                            {'last_name': creditor.last_name,\
+                             "first_name": creditor.first_name,\
+                             "phone":creditor.phone})
 
         formbox.addRow("Creator", self.box_type)
 

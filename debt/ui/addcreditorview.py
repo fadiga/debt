@@ -10,6 +10,7 @@ from PyQt4 import QtGui, QtCore
 from database import *
 from dashbord import DashbordViewWidget
 from common import DebtWidget, DebtPageTitle
+from debtview import DebtViewWidget
 
 
 class CreditorViewWidget(QtGui.QDialog, DebtWidget):
@@ -31,7 +32,7 @@ class CreditorViewWidget(QtGui.QDialog, DebtWidget):
         formbox.addRow("phone", self.phone)
 
         button_hbox = QtGui.QHBoxLayout()
-        butt = QtGui.QPushButton((u"Add"))
+        butt = QtGui.QPushButton((u"Next"))
         butt.clicked.connect(self.add_creditor)
         cancel_but = QtGui.QPushButton((u"Cancel"))
         cancel_but.clicked.connect(self.cancel)
@@ -62,3 +63,5 @@ class CreditorViewWidget(QtGui.QDialog, DebtWidget):
             self.adress.clear()
             self.phone.clear()
             self.change_main_context(DashbordViewWidget)
+            self.close()
+            self.open_dialog(DebtViewWidget, modal=True)
