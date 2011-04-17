@@ -40,10 +40,11 @@ class OperationViewWidget(QtGui.QDialog, DebtWidget):
 
         for index in xrange(0, len(self.data_debt)):
             debt = self.data_debt[index]
-            self.box_type.addItem((u'%(last_name)s %(first_name)s pour%(des)s le %(date)s') %\
-                            {'last_name': debt.creditor.last_name,\
+            self.box_type.\
+            addItem((u'%(last_name)s %(first_name)s pour%(amount)s le %(date)s')\
+                        % {'last_name': debt.creditor.last_name,\
                              "first_name":debt.creditor.first_name,\
-                             "des":debt.amount_debt,\
+                             "amount":debt.amount_debt,\
                              "date":debt.start_date})
 
         editbox = QtGui.QHBoxLayout()

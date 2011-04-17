@@ -22,11 +22,15 @@ class addViewWidget(QtGui.QDialog, DebtWidget):
 
         #Combobox widget
         self.box_type = QtGui.QComboBox()
-        self.data_creditor = session.query(Creditor).order_by(desc(Creditor.id)).all()
-        self.box_type.addItem(u"Nouveau")
-        for index in xrange(0, len(self.data_creditor)):
-            creditor = self.data_creditor[index]
-            self.box_type.addItem((u"%(last_name)s %(first_name)s pour%(phone)s") %\
+        self.data_creditor = session.query(Creditor).\
+                                        order_by(desc(Creditor.id)).all()
+        self.list_creditor = [u"Nouveau"] + self.data_creditor
+        for index in xrange(0, len(self.list_creditor)):
+            creditor = self.list_creditor[index]
+            if  index == 0:
+                self.box_type.addItem(self.list_creditor[0])
+            else:
+                self.box_type.addItem((u"%(last_name)s %(first_name)s pour%(phone)s") %\
                             {'last_name': creditor.last_name,\
                              "first_name": creditor.first_name,\
                              "phone":creditor.phone})
@@ -54,4 +58,4 @@ class addViewWidget(QtGui.QDialog, DebtWidget):
         if self.box_type.currentIndex() == 0:
             self.open_dialog(CreditorViewWidget, modal=True)
         else:
-            self.open_dialog(DebtViewWidget, modal=True)
+            self.open_dialog(DebtViewWidget, modal=True, credit = self.box_type.currentIndex())
