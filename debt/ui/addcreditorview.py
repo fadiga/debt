@@ -17,6 +17,8 @@ class CreditorViewWidget(QtGui.QDialog, DebtWidget):
 
     def __init__(self, parent=0, *args, **kwargs):
         QtGui.QDialog.__init__(self, parent, *args, **kwargs)
+        self.setWindowTitle((u"Add creditor"))
+
         self.title = DebtPageTitle(u"Creditor")
 
         formbox = QtGui.QFormLayout()

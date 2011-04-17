@@ -16,6 +16,8 @@ class addViewWidget(QtGui.QDialog, DebtWidget):
 
     def __init__(self, parent=0, *args, **kwargs):
         QtGui.QDialog.__init__(self, parent, *args, **kwargs)
+        self.setWindowTitle((u"Choose operation"))
+
         self.title = DebtPageTitle(u"Choose")
 
         formbox = QtGui.QFormLayout()

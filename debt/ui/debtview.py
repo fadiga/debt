@@ -17,6 +17,8 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
 
     def __init__(self, parent, credit, *args, **kwargs):
         QtGui.QDialog.__init__(self, parent, *args, **kwargs)
+        self.setWindowTitle((u"Add debt"))
+
         self.title = DebtPageTitle(u"Debt")
 
         # Edit
