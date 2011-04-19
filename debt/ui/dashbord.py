@@ -85,11 +85,13 @@ class DebtsTableWidget(DebtTableWidget):
                                     ._item_for_data(row, column, data, context)
 
     def click_item(self, row, column, *args):
-        last_column = self.header.__len__() + 1
+        last_column = self.header.__len__()
+        print last_column
+
         if column != last_column:
             return
         try:
-            self.parent.change_main_context(OperationTableWidget, \
+            self.parent.change_main_context(OperationWidget, \
                                         account=self.data[row][last_column])
         except IndexError:
             pass
