@@ -2,10 +2,14 @@
 # -*- coding: utf-8 -*-
 # maintainer: Fad
 
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
+from PyQt4 import QtCore
+from PyQt4.QtCore import Qt
+
 from database import *
+
 from common import DebtWidget, DebtPageTitle, DebtTableWidget
-from gettext import gettext as _
+from operationview import OperationViewWidget
 
 
 class DashbordViewWidget(DebtWidget):
@@ -63,9 +67,9 @@ class DebtsTableWidget(DebtTableWidget):
     def __init__(self, parent, *args, **kwargs):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [_(u"first_name"), _(u"Designation"), \
-                        _(u"Amount"), _(u"End date"), \
-                        _(u"Go")]
+        self.header = [(u"first_name"), (u"Designation"), \
+                        (u"Amount"), (u"End date"), \
+                        (u"Go")]
         self.set_data_for()
         self.refresh(True)
 
@@ -79,7 +83,7 @@ class DebtsTableWidget(DebtTableWidget):
     def _item_for_data(self, row, column, data, context=None):
         if column == self.data[0].__len__() - 1:
             return QtGui.QTableWidgetItem(QtGui.QIcon("icons/go-next.png"), \
-                                          _(u"Operations"))
+                                          (u"Operations"))
 
         return super(DebtsTableWidget, self)\
                                     ._item_for_data(row, column, data, context)
@@ -88,8 +92,8 @@ class DebtsTableWidget(DebtTableWidget):
         last_column = self.header.__len__() - 1
         if column != last_column:
             print last_column
+            self.change_main_context(OperationViewWidget,debt=self.data[row][last_column])
             return
-        self.parent.change_main_context(OperationViewWidget)
         try:
             self.parent.change_main_context(OperationViewWidget, \
                                         debt=self.data[row][last_column])
@@ -101,9 +105,9 @@ class AlertTableWidget(DebtTableWidget):
     def __init__(self, parent, *args, **kwargs):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [_(u"last_name"), _(u"first_name"), \
-                        _(u"Amount paid")]
-        self._title = [_("fad")]
+        self.header = [(u"last_name"), (u"first_name"), \
+                        (u"Amount paid")]
+        self._title = [("fad")]
         self.set_data_for()
         self.refresh(True)
 

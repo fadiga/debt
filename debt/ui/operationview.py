@@ -8,13 +8,12 @@ from datetime import datetime
 from PyQt4 import QtGui, QtCore
 
 from database import *
-from dashbord import DashbordViewWidget
 from common import DebtWidget, DebtPageTitle, DebtTableWidget
 
 
 class OperationViewWidget(DebtWidget):
 
-    def __init__(self, parent=0, *args, **kwargs):
+    def __init__(self, debt="", parent=0, *args, **kwargs):
         super(OperationViewWidget, self).__init__(parent=parent, *args, **kwargs)
         self.setWindowTitle((u"Add operation"))
 
@@ -66,7 +65,7 @@ class OperationViewWidget(DebtWidget):
                                 int(day), int(hour),\
                                         int(minute))
 
-        if self.date_ and self.time and self.type_ and self.value_:
+        if self.date_ and self.time and self.value_:
             operation = Operation(unicode(self.value_.text()), \
                             datetime_,\
                             self.data_debt[self.box_type.currentIndex()])

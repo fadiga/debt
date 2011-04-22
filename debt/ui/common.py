@@ -7,6 +7,8 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import Qt
 MAIN_WIDGET_SIZE = 1200
 
+from utils import formatted_number
+
 
 class DebtPageTitle(QtGui.QLabel):
 
@@ -192,6 +194,9 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         ''' formats input value for string in table widget '''
         if isinstance(value, basestring):
             return value
+
+        if isinstance(value, (int, float, long)):
+            return formatted_number(value)
 
         return u"%s" % value
 
