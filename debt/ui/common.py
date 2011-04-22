@@ -16,6 +16,13 @@ class DebtPageTitle(QtGui.QLabel):
         self.setAlignment(Qt.AlignCenter)
 
 
+class DebtBoxTitle(QtGui.QLabel):
+
+    def __init__(self, *args, **kwargs):
+        super(DebtBoxTitle, self).__init__(*args, **kwargs)
+        self.setFont(QtGui.QFont("Times New Roman", 14))
+        self.setAlignment(Qt.AlignCenter)
+
 class DebtWidget(QtGui.QWidget):
 
     def __init__(self, parent=0, *args, **kwargs):

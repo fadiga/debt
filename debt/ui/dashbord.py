@@ -74,46 +74,27 @@ class DebtsTableWidget(DebtTableWidget):
         debts = session.query(Debt).all()
         if len(debts) > 0:
             self.data = [(db.creditor.first_name, db.designation,\
-                            db.amount_debt, db.end_date) for db in \
-                            session.query(Debt).all()]
+                            db.amount_debt, db.end_date) for db in debts]
 
     def _item_for_data(self, row, column, data, context=None):
-        if column == self.data[0].__len__() + 1:
+        if column == self.data[0].__len__() - 1:
             return QtGui.QTableWidgetItem(QtGui.QIcon("icons/go-next.png"), \
                                           _(u"Operations"))
+
         return super(DebtsTableWidget, self)\
                                     ._item_for_data(row, column, data, context)
 
     def click_item(self, row, column, *args):
-        last_column = self.header.__len__()
-        print last_column
-
+        last_column = self.header.__len__() - 1
         if column != last_column:
+            print last_column
             return
+        self.parent.change_main_context(OperationViewWidget)
         try:
-            self.parent.change_main_context(OperationWidget, \
-                                        account=self.data[row][last_column])
+            self.parent.change_main_context(OperationViewWidget, \
+                                        debt=self.data[row][last_column])
         except IndexError:
             pass
-
-
-class OperationTableWidget(DebtTableWidget):
-
-    def __init__(self, parent, *args, **kwargs):
-
-        DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [_(u"last_name"), _(u"first_name"), \
-                        _(u"Amount paid")]
-        self.set_data_for()
-        self.refresh(True)
-
-
-    def set_data_for(self):
-        operations = session.query(Operation).all()
-        if len(operations) > 0:
-            self.data = [(op.debt.creditor.last_name, \
-            op.debt.creditor.first_name, op.amount_paid)
-                for op in operations]
 
 class AlertTableWidget(DebtTableWidget):
 

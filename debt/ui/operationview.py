@@ -9,37 +9,27 @@ from PyQt4 import QtGui, QtCore
 
 from database import *
 from dashbord import DashbordViewWidget
-from common import DebtWidget, DebtPageTitle
+from common import DebtWidget, DebtPageTitle, DebtTableWidget
 
 
-class OperationViewWidget(QtGui.QDialog, DebtWidget):
+class OperationViewWidget(DebtWidget):
 
     def __init__(self, parent=0, *args, **kwargs):
-        QtGui.QDialog.__init__(self, parent, *args, **kwargs)
+        super(OperationViewWidget, self).__init__(parent=parent, *args, **kwargs)
         self.setWindowTitle((u"Add operation"))
 
         self.title = DebtPageTitle(u"Operation")
+        self.table_op = OperationTableWidget(parent=self)
 
-        formbox = QtGui.QFormLayout()
         self.date_ = QtGui.QDateTimeEdit(QtCore.QDate.currentDate())
         self.date_.setDisplayFormat("dd-MM-yyyy")
         self.time = QtGui.QDateTimeEdit(QtCore.QTime.currentTime())
         self.time.setDisplayFormat("hh:mm")
-        self.type_ = QtGui.QLineEdit()
         self.value_ = QtGui.QLineEdit()
         self.value_.setValidator(QtGui.QIntValidator())
-
-        #~ self.label.move(130, 100)
-        titelebox = QtGui.QHBoxLayout()
-        titelebox.addWidget(QtGui.QLabel((u'Date')))
-        titelebox.addWidget(QtGui.QLabel((u'time')))
-        titelebox.addWidget(QtGui.QLabel((u'Debt')))
-        titelebox.addWidget(QtGui.QLabel((u'Montant')))
-
         #Combobox widget
         self.box_type = QtGui.QComboBox()
         self.data_debt = session.query(Debt).all()
-
         for index in xrange(0, len(self.data_debt)):
             debt = self.data_debt[index]
             self.box_type.\
@@ -49,31 +39,24 @@ class OperationViewWidget(QtGui.QDialog, DebtWidget):
                              "amount":debt.amount_debt,\
                              "date":debt.start_date})
 
-        editbox = QtGui.QHBoxLayout()
-        editbox.addWidget(self.date_)
-        editbox.addWidget(self.time)
-        editbox.addWidget(self.box_type)
-        editbox.addWidget(self.value_)
-
-        button_hbox = QtGui.QHBoxLayout()
+        formbox = QtGui.QFormLayout()
+        formbox.addRow("Date", self.date_)
+        formbox.addRow("time", self.time)
+        formbox.addRow("Debt", self.box_type)
+        formbox.addRow("Montant", self.value_)
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(self.table_op)
         butt = QtGui.QPushButton((u"Add"))
         butt.clicked.connect(self.add_operation)
-        cancel_but = QtGui.QPushButton((u"Cancel"))
-        cancel_but.clicked.connect(self.cancel)
-        button_hbox.addWidget(butt)
-        button_hbox.addWidget(cancel_but)
-
+        formbox.addWidget(butt)
         vbox = QtGui.QVBoxLayout()
         vbox.addWidget(self.title)
 
-        vbox.addLayout(titelebox)
         vbox.addLayout(formbox)
-        vbox.addLayout(editbox)
-        vbox.addLayout(button_hbox)
-        self.setLayout(vbox)
+        #~ vbox.addLayout(editbox)
+        vbox.addLayout(hbox)
 
-    def cancel(self):
-        self.close()
+        self.setLayout(vbox)
 
     def add_operation(self):
         ''' add operation '''
@@ -90,4 +73,21 @@ class OperationViewWidget(QtGui.QDialog, DebtWidget):
             session.add(operation)
             session.commit()
             self.value_.clear()
-            self.change_main_context(DashbordViewWidget)
+            self.change_main_context(OperationViewWidget)
+
+
+class OperationTableWidget(DebtTableWidget):
+
+    def __init__(self, parent, *args, **kwargs):
+
+        DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
+        self.header = [(u"last_name"), (u"first_name"), \
+                        (u"Amount paid")]
+        self._title = [("fad")]
+        self.set_data_for()
+        self.refresh(True)
+
+    def set_data_for(self):
+        self.data = [(op.debt.creditor.last_name, \
+        op.debt.creditor.first_name, op.amount_paid)
+            for op in session.query(Operation).all()]

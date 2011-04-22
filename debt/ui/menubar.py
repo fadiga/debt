@@ -64,10 +64,7 @@ class MenuBar(QtGui.QMenuBar, DebtWidget):
         print u'print'
 
     def goto_add_statement(self):
-        self.open_dialog(OperationViewWidget, modal=True)
-
-    #~ def goto_add_debt(self):
-        #~ self.open_dialog(DebtViewWidget, modal=True)
+        self.change_main_context(OperationViewWidget)
 
     def goto_add_debt(self):
         self.open_dialog(addViewWidget, modal=True)
