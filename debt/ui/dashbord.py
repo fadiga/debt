@@ -62,6 +62,7 @@ class DashbordViewWidget(DebtWidget):
         self.label.move(180, 25)
         #~ print str(date.toPyDate()),"date"
 
+
 class DebtsTableWidget(DebtTableWidget):
 
     def __init__(self, parent, *args, **kwargs):
@@ -78,7 +79,7 @@ class DebtsTableWidget(DebtTableWidget):
         debts = session.query(Debt).all()
         if len(debts) > 0:
             self.data = [(db.creditor.first_name, db.designation,\
-                            db.amount_debt, db.end_date) for db in debts]
+                            db.amount_debt, db.start_date, db.end_date) for db in debts]
 
     def _item_for_data(self, row, column, data, context=None):
         if column == self.data[0].__len__() - 1:
@@ -91,8 +92,6 @@ class DebtsTableWidget(DebtTableWidget):
     def click_item(self, row, column, *args):
         last_column = self.header.__len__() - 1
         if column != last_column:
-            print last_column
-            self.change_main_context(OperationViewWidget,debt=self.data[row][last_column])
             return
         try:
             self.parent.change_main_context(OperationViewWidget, \
