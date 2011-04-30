@@ -21,23 +21,19 @@ class DashbordViewWidget(DebtWidget):
         self.table_debts = DebtsTableWidget(parent=self)
         self.table_alert = AlertTableWidget(parent=self)
 
-        self.vbox = QtGui.QVBoxLayout()
+        vbox = QtGui.QVBoxLayout(self)
 
         splitter_left = QtGui.QSplitter(QtCore.Qt.Horizontal)
         splitter_left.addWidget(self.table_alert)
 
         splitter_down = QtGui.QSplitter(QtCore.Qt.Vertical)
         splitter_down.addWidget(self.table_debts)
-        splitter_down.resize(90, 650)
+        splitter_down.resize(900, 750)
 
-        splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
-        splitter.addWidget(splitter_left)
-        splitter.addWidget(splitter_down)
-
-        self.vbox.addWidget(self.title)
-        self.vbox.addWidget(splitter)
-        self.setLayout(self.vbox)
-
+        vbox.addWidget(self.title)
+        vbox.addWidget(splitter_left)
+        vbox.addWidget(splitter_down)
+        self.setLayout(vbox)
 
 class DebtsTableWidget(DebtTableWidget):
 
