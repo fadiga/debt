@@ -8,7 +8,7 @@ from datetime import datetime
 from PyQt4 import QtGui, QtCore
 
 from database import *
-from common import DebtWidget, DebtPageTitle, DebtTableWidget
+from common import DebtWidget, DebtPageTitle, DebtBoxTitle, DebtTableWidget
 
 
 class OperationViewWidget(DebtWidget):
@@ -16,9 +16,14 @@ class OperationViewWidget(DebtWidget):
     def __init__(self, debt="", parent=0, *args, **kwargs):
         super(OperationViewWidget, self).__init__(parent=parent, *args, **kwargs)
         self.setWindowTitle((u"Add operation"))
+        vbox = QtGui.QVBoxLayout()
+        vbox.addWidget(DebtPageTitle(u"Operation"))
 
-        self.title = DebtPageTitle(u"Operation")
+        hbox = QtGui.QHBoxLayout()
+        tablebox = QtGui.QVBoxLayout()
+        tablebox.addWidget(DebtBoxTitle(u"Table opertion"))
         self.table_op = OperationTableWidget(parent=self)
+        tablebox.addWidget(self.table_op)
 
         self.date_ = QtGui.QDateTimeEdit(QtCore.QDate.currentDate())
         self.date_.setDisplayFormat("dd-MM-yyyy")
@@ -26,35 +31,26 @@ class OperationViewWidget(DebtWidget):
         self.time.setDisplayFormat("hh:mm")
         self.value_ = QtGui.QLineEdit()
         self.value_.setValidator(QtGui.QIntValidator())
-        #Combobox widget
-        self.box_type = QtGui.QComboBox()
-        self.data_debt = session.query(Debt).all()
-        for index in xrange(0, len(self.data_debt)):
-            debt = self.data_debt[index]
-            self.box_type.\
-            addItem((u'%(last_name)s %(first_name)s pour%(amount)s le %(date)s')\
-                        % {'last_name': debt.creditor.last_name,\
-                             "first_name":debt.creditor.first_name,\
-                             "amount":debt.amount_debt,\
-                             "date":debt.start_date})
+
+        cretorbox = QtGui.QFormLayout()
+        cretorbox.addWidget(DebtBoxTitle(u"Creditor info"))
+        cretorbox.addRow("First nameane: ", QtGui.QLabel(debt.creditor.first_name))
+        cretorbox.addRow("Last name: ", QtGui.QLabel(debt.creditor.last_name))
+        cretorbox.addRow("Adress: ", QtGui.QLabel(debt.creditor.adress))
+        cretorbox.addRow("Phone: ", QtGui.QLabel(debt.creditor.phone))
 
         formbox = QtGui.QFormLayout()
+        formbox.addWidget(DebtBoxTitle(u"Add opertion"))
         formbox.addRow("Date", self.date_)
         formbox.addRow("time", self.time)
-        formbox.addRow("Debt", self.box_type)
         formbox.addRow("Montant", self.value_)
-        hbox = QtGui.QHBoxLayout()
-        hbox.addWidget(self.table_op)
         butt = QtGui.QPushButton((u"Add"))
         butt.clicked.connect(self.add_operation)
         formbox.addWidget(butt)
-        vbox = QtGui.QVBoxLayout()
-        vbox.addWidget(self.title)
-
-        vbox.addLayout(formbox)
-        #~ vbox.addLayout(editbox)
+        hbox.addLayout(cretorbox)
+        hbox.addLayout(formbox)
         vbox.addLayout(hbox)
-
+        vbox.addLayout(tablebox)
         self.setLayout(vbox)
 
     def add_operation(self):

@@ -10,6 +10,7 @@ from database import *
 
 from common import DebtWidget, DebtPageTitle, DebtTableWidget
 from operationview import OperationViewWidget
+from data_helpers import debt_summary
 
 
 class DashbordViewWidget(DebtWidget):
@@ -20,31 +21,14 @@ class DashbordViewWidget(DebtWidget):
         self.table_debts = DebtsTableWidget(parent=self)
         self.table_alert = AlertTableWidget(parent=self)
 
-        self.vbox = QtGui.QVBoxLayout(self)
-
-        #Calandar
-        self.cal = QtGui.QCalendarWidget(self)
-        self.cal.setGridVisible(True)
-        self.connect(self.cal, QtCore.SIGNAL('selectionChanged()'), self.showDate)
-        self.label = QtGui.QLabel(self)
-        date = self.cal.selectedDate()
-        #--------------------
-
-        topleft = QtGui.QFrame(self)
-        topleft.setFrameShape(QtGui.QFrame.StyledPanel)
-
-        topright = QtGui.QFrame(self)
-        topright.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.vbox = QtGui.QVBoxLayout()
 
         splitter_left = QtGui.QSplitter(QtCore.Qt.Horizontal)
-        splitter_left.addWidget(self.cal)
-        splitter_left.resize(10, 50)
-        splitter_left.addWidget(self.table_debts)
-
+        splitter_left.addWidget(self.table_alert)
 
         splitter_down = QtGui.QSplitter(QtCore.Qt.Vertical)
-        splitter_down.addWidget(self.table_alert)
-        splitter_down.resize(900, 650)
+        splitter_down.addWidget(self.table_debts)
+        splitter_down.resize(90, 650)
 
         splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
         splitter.addWidget(splitter_left)
@@ -53,14 +37,6 @@ class DashbordViewWidget(DebtWidget):
         self.vbox.addWidget(self.title)
         self.vbox.addWidget(splitter)
         self.setLayout(self.vbox)
-
-        QtGui.QApplication.setStyle(QtGui.QStyleFactory.create('Cleanlooks'))
-
-    def showDate(self):
-        date = self.cal.selectedDate()
-        self.label.setText(str(date.toPyDate()))
-        self.label.move(180, 25)
-        #~ print str(date.toPyDate()),"date"
 
 
 class DebtsTableWidget(DebtTableWidget):
@@ -74,12 +50,10 @@ class DebtsTableWidget(DebtTableWidget):
         self.set_data_for()
         self.refresh(True)
 
-
     def set_data_for(self):
         debts = session.query(Debt).all()
         if len(debts) > 0:
-            self.data = [(db.creditor.first_name, db.designation,\
-                            db.amount_debt, db.start_date, db.end_date) for db in debts]
+            self.data = [debt_summary(db) for db in debts]
 
     def _item_for_data(self, row, column, data, context=None):
         if column == self.data[0].__len__() - 1:

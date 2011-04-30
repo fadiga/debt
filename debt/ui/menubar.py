@@ -48,8 +48,7 @@ class MenuBar(QtGui.QMenuBar, DebtWidget):
         file.addAction(exit)
         # Menu go to
         goto = self.addMenu(_(u"&Go to"))
-        goto.addAction(_(u"Add Statement"),\
-                                       self.goto_add_statement)
+
         goto.addAction(_(u"Add Debt"),\
                                        self.goto_add_debt)
         goto.addAction(_(u"Dashbord"),\
@@ -63,8 +62,6 @@ class MenuBar(QtGui.QMenuBar, DebtWidget):
     def goto_print(self):
         print u'print'
 
-    def goto_add_statement(self):
-        self.change_main_context(OperationViewWidget)
 
     def goto_add_debt(self):
         self.open_dialog(addViewWidget, modal=True)
