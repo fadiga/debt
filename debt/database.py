@@ -88,7 +88,7 @@ class Debt(object):
 class Operation(object):
 
     def __init__(self, amount_paid, \
-                 registered_on=datetime.now(), debt=None):
+                 registered_on, debt=None):
         self.debt = debt
         self.amount_paid = amount_paid
         self.registered_on = registered_on

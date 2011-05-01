@@ -8,7 +8,7 @@ from PyQt4.QtCore import Qt
 
 from database import *
 
-from common import DebtWidget, DebtPageTitle, DebtTableWidget
+from common import DebtWidget, DebtPageTitle, DebtBoxTitle, DebtTableWidget
 from operationview import OperationViewWidget
 from data_helpers import debt_summary
 
@@ -23,10 +23,12 @@ class DashbordViewWidget(DebtWidget):
 
         vbox = QtGui.QVBoxLayout(self)
 
-        splitter_left = QtGui.QSplitter(QtCore.Qt.Horizontal)
+        splitter_left = QtGui.QSplitter(QtCore.Qt.Vertical)
+        splitter_left.addWidget(DebtBoxTitle(u"Alters table"))
         splitter_left.addWidget(self.table_alert)
 
         splitter_down = QtGui.QSplitter(QtCore.Qt.Vertical)
+        splitter_down.addWidget(DebtBoxTitle(u"Debt table "))
         splitter_down.addWidget(self.table_debts)
         splitter_down.resize(900, 750)
 
@@ -53,7 +55,7 @@ class DebtsTableWidget(DebtTableWidget):
 
     def _item_for_data(self, row, column, data, context=None):
         if column == self.data[0].__len__() - 1:
-            return QtGui.QTableWidgetItem(QtGui.QIcon("icons/go-next.png"), \
+            return QtGui.QTableWidgetItem(QtGui.QIcon("icons/see.png"), \
                                           (u"Operations"))
 
         return super(DebtsTableWidget, self)\

@@ -5,6 +5,7 @@
 
 from datetime import datetime
 
+from sqlalchemy import desc
 from PyQt4 import QtGui, QtCore
 
 from database import *
@@ -16,10 +17,14 @@ class OperationViewWidget(DebtWidget):
     def __init__(self, debt="", parent=0, *args, **kwargs):
         super(OperationViewWidget, self).__init__(parent=parent, *args, **kwargs)
         self.setWindowTitle((u"Add operation"))
+        self.debt = debt
         vbox = QtGui.QVBoxLayout()
         vbox.addWidget(DebtPageTitle(u"Operation"))
 
         hbox = QtGui.QHBoxLayout()
+        hbox1 = QtGui.QHBoxLayout()
+        hbox2 = QtGui.QHBoxLayout()
+
         tablebox = QtGui.QVBoxLayout()
         tablebox.addWidget(DebtBoxTitle(u"Table opertion"))
         self.table_op = OperationTableWidget(parent=self)
@@ -34,27 +39,31 @@ class OperationViewWidget(DebtWidget):
 
         cretorbox = QtGui.QFormLayout()
         cretorbox.addWidget(DebtBoxTitle(u"Creditor info"))
-        cretorbox.addRow("First nameane: ", QtGui.QLabel(debt.creditor.first_name))
-        cretorbox.addRow("Last name: ", QtGui.QLabel(debt.creditor.last_name))
-        cretorbox.addRow("Adress: ", QtGui.QLabel(debt.creditor.adress))
-        cretorbox.addRow("Phone: ", QtGui.QLabel(debt.creditor.phone))
+        cretorbox.addRow("First nameane: ", QtGui.QLabel(self.debt.creditor.first_name))
+        cretorbox.addRow("Last name: ", QtGui.QLabel(self.debt.creditor.last_name))
+        cretorbox.addRow("Adress: ", QtGui.QLabel(self.debt.creditor.adress))
+        cretorbox.addRow("Phone: ", QtGui.QLabel(self.debt.creditor.phone))
 
         formbox = QtGui.QFormLayout()
         formbox.addWidget(DebtBoxTitle(u"Add opertion"))
         formbox.addRow("Date", self.date_)
         formbox.addRow("time", self.time)
         formbox.addRow("Montant", self.value_)
+
         butt = QtGui.QPushButton((u"Add"))
         butt.clicked.connect(self.add_operation)
         formbox.addWidget(butt)
-        hbox.addLayout(cretorbox)
-        hbox.addLayout(formbox)
+        hbox1.addLayout(formbox)
+        hbox2.addLayout(cretorbox)
+        hbox.addLayout(hbox1)
+        hbox.addLayout(hbox2)
         vbox.addLayout(hbox)
         vbox.addLayout(tablebox)
         self.setLayout(vbox)
 
     def add_operation(self):
         ''' add operation '''
+        debt = self.debt
         day, month, year = self.date_.text().split('-')
         hour, minute = self.time.text().split(':')
         datetime_ = datetime(int(year), int(month),\
@@ -63,18 +72,17 @@ class OperationViewWidget(DebtWidget):
 
         if self.date_ and self.time and self.value_:
             operation = Operation(unicode(self.value_.text()), \
-                            datetime_,\
-                            self.data_debt[self.box_type.currentIndex()])
+                                        datetime_, debt)
             session.add(operation)
             session.commit()
             self.value_.clear()
-            self.change_main_context(OperationViewWidget)
+            self.refresh()
+            self.change_main_context(OperationViewWidget,debt)
 
 
 class OperationTableWidget(DebtTableWidget):
 
     def __init__(self, parent, *args, **kwargs):
-
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
         self.header = [(u"last_name"), (u"first_name"), \
                         (u"Amount paid")]
