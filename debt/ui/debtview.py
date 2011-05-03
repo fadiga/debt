@@ -106,4 +106,4 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
             self.amount.clear()
             self.change_main_context(DashbordViewWidget)
             self.close()
-            raise_success((u'Confirmation'), (u'Registered opération'))
+            #~ raise_success((u'Confirmation'), (u'Registered opération'))

@@ -72,7 +72,6 @@ class OperationViewWidget(DebtWidget):
                                         datetime_, debt)
             session.add(operation)
             session.commit()
-            #~ raise_success((u'Confirmation'), (u'Registered opération'))
             self.montant.clear()
             self.refresh()
             self.change_main_context(OperationViewWidget,debt)
@@ -84,7 +83,7 @@ class OperationTableWidget(DebtTableWidget):
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
         self.header = [(u"Last name"), (u"First name"), \
                         (u"Start date"), (u"End date"),\
-                        (u"Amount paid"), ]
+                        (u"Amount paid")]
         self.set_data_for()
         self.refresh(True)
 

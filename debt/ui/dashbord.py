@@ -78,11 +78,15 @@ class AlertTableWidget(DebtTableWidget):
     def __init__(self, parent, *args, **kwargs):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [(u"last_name"), (u"first_name"), \
-                        (u"Amount paid")]
-        self._title = [("fad")]
+        self.header = [(u"Last name"), (u"First name"),\
+                        (u"Start date"), (u"Amount paid"),\
+                                    (u"Days remaining")]
         self.set_data_for()
         self.refresh(True)
 
     def set_data_for(self):
-        self.data =  alert()
+        self.data = [(op[0].creditor.last_name,\
+                            op[0].creditor.first_name,\
+                            op[0].end_date.strftime(u"%d/%B/%y %H:%M"),\
+                            op[0].amount_debt, op[1])\
+                             for op in  alert()]
