@@ -9,6 +9,7 @@ from PyQt4 import QtGui, QtCore
 from sqlalchemy import desc
 
 from database import *
+from utils import raise_success, raise_error
 from dashbord import DashbordViewWidget
 from common import DebtWidget, DebtPageTitle
 
@@ -98,10 +99,11 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
                         and self.endtime and self.amount:
             debt = Debt(unicode(self.des.text()), unicode(self.amount.text()),\
                                             start_datetime, end_datetime)
-            #~ debt = Debt("1 Moto ktm", 325000, datetime(2010, 10, 01,10,50),datetime(2011, 11, 20,18,20))
             debt.creditor = self.data_creditor[self.box_creditor.currentIndex()]
             session.add(debt)
             session.commit()
             self.des.clear()
             self.amount.clear()
             self.change_main_context(DashbordViewWidget)
+            self.close()
+            raise_success((u'Confirmation'), (u'Registered opération'))

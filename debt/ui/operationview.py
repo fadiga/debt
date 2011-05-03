@@ -10,7 +10,7 @@ from PyQt4 import QtGui, QtCore
 
 from database import *
 from common import DebtWidget, DebtPageTitle, DebtBoxTitle, DebtTableWidget
-
+from utils import raise_success, raise_error
 
 class OperationViewWidget(DebtWidget):
 
@@ -22,8 +22,6 @@ class OperationViewWidget(DebtWidget):
         vbox.addWidget(DebtPageTitle(u"Operation"))
 
         hbox = QtGui.QHBoxLayout()
-        hbox1 = QtGui.QHBoxLayout()
-        hbox2 = QtGui.QHBoxLayout()
 
         tablebox = QtGui.QVBoxLayout()
         tablebox.addWidget(DebtBoxTitle(u"Table opertion"))
@@ -34,29 +32,28 @@ class OperationViewWidget(DebtWidget):
         self.date_.setDisplayFormat("dd-MM-yyyy")
         self.time = QtGui.QDateTimeEdit(QtCore.QTime.currentTime())
         self.time.setDisplayFormat("hh:mm")
-        self.value_ = QtGui.QLineEdit()
-        self.value_.setValidator(QtGui.QIntValidator())
+        self.montant = QtGui.QLineEdit()
+        self.montant.setValidator(QtGui.QIntValidator())
 
         cretorbox = QtGui.QFormLayout()
         cretorbox.addWidget(DebtBoxTitle(u"Creditor info"))
-        cretorbox.addRow("First nameane: ", QtGui.QLabel(self.debt.creditor.first_name))
+        cretorbox.addRow("First name: ", QtGui.QLabel(self.debt.creditor.first_name))
         cretorbox.addRow("Last name: ", QtGui.QLabel(self.debt.creditor.last_name))
         cretorbox.addRow("Adress: ", QtGui.QLabel(self.debt.creditor.adress))
         cretorbox.addRow("Phone: ", QtGui.QLabel(self.debt.creditor.phone))
 
         formbox = QtGui.QFormLayout()
+        formbox.setContentsMargins(200, 0, 200, 0)
         formbox.addWidget(DebtBoxTitle(u"Add opertion"))
         formbox.addRow("Date", self.date_)
         formbox.addRow("time", self.time)
-        formbox.addRow("Montant", self.value_)
-
+        formbox.addRow("Montant", self.montant)
         butt = QtGui.QPushButton((u"Add"))
         butt.clicked.connect(self.add_operation)
         formbox.addWidget(butt)
-        hbox1.addLayout(formbox)
-        hbox2.addLayout(cretorbox)
-        hbox.addLayout(hbox1)
-        hbox.addLayout(hbox2)
+
+        hbox.addLayout(cretorbox)
+        hbox.addLayout(formbox)
         vbox.addLayout(hbox)
         vbox.addLayout(tablebox)
         self.setLayout(vbox)
@@ -70,12 +67,13 @@ class OperationViewWidget(DebtWidget):
                                 int(day), int(hour),\
                                         int(minute))
 
-        if self.date_ and self.time and self.value_:
-            operation = Operation(unicode(self.value_.text()), \
+        if self.date_ and self.time and self.montant:
+            operation = Operation(unicode(self.montant.text()), \
                                         datetime_, debt)
             session.add(operation)
             session.commit()
-            self.value_.clear()
+            #~ raise_success((u'Confirmation'), (u'Registered opération'))
+            self.montant.clear()
             self.refresh()
             self.change_main_context(OperationViewWidget,debt)
 
@@ -84,13 +82,14 @@ class OperationTableWidget(DebtTableWidget):
 
     def __init__(self, parent, *args, **kwargs):
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [(u"last_name"), (u"first_name"), \
-                        (u"Amount paid")]
-        self._title = [("fad")]
+        self.header = [(u"Last name"), (u"First name"), \
+                        (u"Start date"), (u"End date"),\
+                        (u"Amount paid"), ]
         self.set_data_for()
         self.refresh(True)
 
     def set_data_for(self):
         self.data = [(op.debt.creditor.last_name, \
-        op.debt.creditor.first_name, op.amount_paid)
-            for op in session.query(Operation).all()]
+                        op.debt.creditor.first_name, op.debt.end_date.strftime(u"%d/%B/%y %H:%M"),\
+                         op.debt.start_date.strftime(u"%d/%B/%y %H:%M"), op.amount_paid)
+                            for op in session.query(Operation).all()]

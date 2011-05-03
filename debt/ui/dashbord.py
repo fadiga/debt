@@ -10,7 +10,7 @@ from database import *
 
 from common import DebtWidget, DebtPageTitle, DebtBoxTitle, DebtTableWidget
 from operationview import OperationViewWidget
-from data_helpers import debt_summary
+from data_helpers import debt_summary, alert
 
 
 class DashbordViewWidget(DebtWidget):
@@ -30,11 +30,13 @@ class DashbordViewWidget(DebtWidget):
         splitter_down = QtGui.QSplitter(QtCore.Qt.Vertical)
         splitter_down.addWidget(DebtBoxTitle(u"Debt table "))
         splitter_down.addWidget(self.table_debts)
-        splitter_down.resize(900, 750)
+        splitter_down.resize(900, 950)
+        splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
+        splitter.addWidget(splitter_left)
+        splitter.addWidget(splitter_down)
 
         vbox.addWidget(self.title)
-        vbox.addWidget(splitter_left)
-        vbox.addWidget(splitter_down)
+        vbox.addWidget(splitter)
         self.setLayout(vbox)
 
 class DebtsTableWidget(DebtTableWidget):
@@ -42,7 +44,7 @@ class DebtsTableWidget(DebtTableWidget):
     def __init__(self, parent, *args, **kwargs):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [(u"first_name"), (u"Designation"), \
+        self.header = [(u"First name"), (u"Designation"), \
                         (u"Amount"), (u"End date"), \
                         (u"Go")]
         self.set_data_for()
@@ -56,7 +58,7 @@ class DebtsTableWidget(DebtTableWidget):
     def _item_for_data(self, row, column, data, context=None):
         if column == self.data[0].__len__() - 1:
             return QtGui.QTableWidgetItem(QtGui.QIcon("icons/see.png"), \
-                                          (u"Operations"))
+                                          (u"see"))
 
         return super(DebtsTableWidget, self)\
                                     ._item_for_data(row, column, data, context)
@@ -83,6 +85,4 @@ class AlertTableWidget(DebtTableWidget):
         self.refresh(True)
 
     def set_data_for(self):
-        self.data = [(op.debt.creditor.last_name, \
-        op.debt.creditor.first_name, op.amount_paid)
-            for op in session.query(Operation).all()]
+        self.data =  alert()
