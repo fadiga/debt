@@ -36,17 +36,18 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
         self.amount.setValidator(QtGui.QIntValidator())
         #Combobox widget
         self.box_creditor = QtGui.QComboBox()
-        self.data_creditor = session.query(Creditor).order_by(desc(Creditor.id)).all()
+        self.data_creditor = session.query(Creditor).\
+                                        order_by(desc(Creditor.id)).all()
 
         for index in xrange(0, len(self.data_creditor)):
             creditor = self.data_creditor[index]
             self.box_creditor.\
                 addItem((u'%(last_name)s %(first_name)s tel : %(phone)s') %\
                             {'last_name': creditor.last_name,\
-                             "first_name":creditor.first_name,\
-                             "phone":creditor.phone})
+                             "first_name": creditor.first_name,\
+                             "phone": creditor.phone})
         if credit is not None:
-            self.box_creditor.setCurrentIndex(credit -1)
+            self.box_creditor.setCurrentIndex(credit - 1)
 
         desbox = QtGui.QFormLayout()
         desbox.addRow("Designation", self.des)
@@ -97,9 +98,11 @@ class DebtViewWidget(QtGui.QDialog, DebtWidget):
         if self.des and self.starttime and self.startdate\
                         and self.box_creditor and self.enddate\
                         and self.endtime and self.amount:
-            debt = Debt(unicode(self.des.text()), unicode(self.amount.text()),\
+            debt = Debt(unicode(self.des.text()),\
+                                            unicode(self.amount.text()),\
                                             start_datetime, end_datetime)
-            debt.creditor = self.data_creditor[self.box_creditor.currentIndex()]
+            debt.creditor = self.data_creditor[self.\
+                                            box_creditor.currentIndex()]
             session.add(debt)
             session.commit()
             self.des.clear()

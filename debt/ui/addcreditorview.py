@@ -66,4 +66,4 @@ class CreditorViewWidget(QtGui.QDialog, DebtWidget):
             self.phone.clear()
             self.change_main_context(DashbordViewWidget)
             self.close()
-            self.open_dialog(DebtViewWidget, modal=True, credit = None)
+            self.open_dialog(DebtViewWidget, modal=True, credit=None)

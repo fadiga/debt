@@ -14,6 +14,7 @@ from data_helpers import debt_summary, alert
 
 
 class DashbordViewWidget(DebtWidget):
+
     def __init__(self, parent=0, *args, **kwargs):
         super(DashbordViewWidget, self).__init__(parent=parent,
                                                         *args, **kwargs)
@@ -39,6 +40,7 @@ class DashbordViewWidget(DebtWidget):
         vbox.addWidget(splitter)
         self.setLayout(vbox)
 
+
 class DebtsTableWidget(DebtTableWidget):
 
     def __init__(self, parent, *args, **kwargs):
@@ -57,11 +59,11 @@ class DebtsTableWidget(DebtTableWidget):
 
     def _item_for_data(self, row, column, data, context=None):
         if column == self.data[0].__len__() - 1:
-            return QtGui.QTableWidgetItem(QtGui.QIcon("icons/see.png"), \
-                                          (u"see"))
+            return QtGui.QTableWidgetItem(QtGui.QIcon("icons/see.png"),\
+                                         (u"see"))
 
         return super(DebtsTableWidget, self)\
-                                    ._item_for_data(row, column, data, context)
+                            ._item_for_data(row, column, data, context)
 
     def click_item(self, row, column, *args):
         last_column = self.header.__len__() - 1
@@ -72,6 +74,7 @@ class DebtsTableWidget(DebtTableWidget):
                                         debt=self.data[row][last_column])
         except IndexError:
             pass
+
 
 class AlertTableWidget(DebtTableWidget):
 

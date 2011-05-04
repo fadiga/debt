@@ -62,8 +62,8 @@ class Creditor(object):
         {'first_name': self.first_name}
 
     def __unicode__(self):
-        return (u"%(last_name)s (first_name)s") % {'last_name': self.last_name,\
-                                        'first_name': self.first_name}
+        return (u"%(last_name)s (first_name)s") % {'last_name':\
+                    self.last_name, 'first_name': self.first_name}
 
 
 class Debt(object):
@@ -78,7 +78,7 @@ class Debt(object):
 
     def __reper__(object):
         return ("<Debt('%(designation)s')>,'%(amount_debt)s')>") %\
-                {'designation':designation,'amount_debt': self.amount_debt}
+                {'designation': designation, 'amount_debt': self.amount_debt}
 
     def __unicde__(self):
         return (u"%(creditor)s %(amount_debt)s") % {'creditor': self.creditor,\

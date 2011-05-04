@@ -12,10 +12,12 @@ from database import *
 from common import DebtWidget, DebtPageTitle, DebtBoxTitle, DebtTableWidget
 from utils import raise_success, raise_error
 
+
 class OperationViewWidget(DebtWidget):
 
     def __init__(self, debt="", parent=0, *args, **kwargs):
-        super(OperationViewWidget, self).__init__(parent=parent, *args, **kwargs)
+        super(OperationViewWidget, self).__init__(parent=parent,\
+                                                        *args, **kwargs)
         self.setWindowTitle((u"Add operation"))
         self.debt = debt
         vbox = QtGui.QVBoxLayout()
@@ -37,9 +39,12 @@ class OperationViewWidget(DebtWidget):
 
         cretorbox = QtGui.QFormLayout()
         cretorbox.addWidget(DebtBoxTitle(u"Creditor info"))
-        cretorbox.addRow("First name: ", QtGui.QLabel(self.debt.creditor.first_name))
-        cretorbox.addRow("Last name: ", QtGui.QLabel(self.debt.creditor.last_name))
-        cretorbox.addRow("Adress: ", QtGui.QLabel(self.debt.creditor.adress))
+        cretorbox.addRow("First name: ",\
+                            QtGui.QLabel(self.debt.creditor.first_name))
+        cretorbox.addRow("Last name: ",\
+                            QtGui.QLabel(self.debt.creditor.last_name))
+        cretorbox.addRow("Adress: ",\
+                                QtGui.QLabel(self.debt.creditor.adress))
         cretorbox.addRow("Phone: ", QtGui.QLabel(self.debt.creditor.phone))
 
         formbox = QtGui.QFormLayout()
@@ -74,7 +79,7 @@ class OperationViewWidget(DebtWidget):
             session.commit()
             self.montant.clear()
             self.refresh()
-            self.change_main_context(OperationViewWidget,debt)
+            self.change_main_context(OperationViewWidget, debt)
 
 
 class OperationTableWidget(DebtTableWidget):
@@ -89,6 +94,8 @@ class OperationTableWidget(DebtTableWidget):
 
     def set_data_for(self):
         self.data = [(op.debt.creditor.last_name, \
-                        op.debt.creditor.first_name, op.debt.end_date.strftime(u"%d/%B/%y %H:%M"),\
-                         op.debt.start_date.strftime(u"%d/%B/%y %H:%M"), op.amount_paid)
+                        op.debt.creditor.first_name,\
+                        op.debt.end_date.strftime(u"%d/%B/%y %H:%M"),\
+                         op.debt.start_date.strftime(u"%d/%B/%y %H:%M"),\
+                          op.amount_paid)\
                             for op in session.query(Operation).all()]

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # encoding=utf-8
-# maintainer: Fad
+# maintainer: Reg
 
 from gettext import gettext as _
 from PyQt4 import QtGui
@@ -24,6 +24,7 @@ class DebtBoxTitle(QtGui.QLabel):
         super(DebtBoxTitle, self).__init__(*args, **kwargs)
         self.setFont(QtGui.QFont("Times New Roman", 14))
         self.setAlignment(Qt.AlignCenter)
+
 
 class DebtWidget(QtGui.QWidget):
 
@@ -79,6 +80,7 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         return self._data
 
     data = property(getdata, setdata)
+
     def setheader(self, value):
         if not isinstance(value, (list, None.__class__)):
             raise ValueError
@@ -88,6 +90,7 @@ class DebtTableWidget(QtGui.QTableWidget, DebtWidget):
         return self._header
 
     header = property(getheader, setheader)
+
     def settitle(self, value):
         if not isinstance(value, (list, None.__class__)):
             raise ValueError

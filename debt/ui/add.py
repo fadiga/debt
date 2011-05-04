@@ -32,10 +32,11 @@ class addViewWidget(QtGui.QDialog, DebtWidget):
             if  index == 0:
                 self.box_type.addItem(self.list_creditor[0])
             else:
-                self.box_type.addItem((u"%(last_name)s %(first_name)s pour%(phone)s") %\
+                self.box_type\
+                .addItem((u"%(last_name)s %(first_name)s pour%(phone)s") %\
                             {'last_name': creditor.last_name,\
                              "first_name": creditor.first_name,\
-                             "phone":creditor.phone})
+                             "phone": creditor.phone})
 
         formbox.addRow("Creator", self.box_type)
 
@@ -56,8 +57,10 @@ class addViewWidget(QtGui.QDialog, DebtWidget):
 
     def cancel(self):
         self.close()
+
     def goto_next(self):
         if self.box_type.currentIndex() == 0:
             self.open_dialog(CreditorViewWidget, modal=True)
         else:
-            self.open_dialog(DebtViewWidget, modal=True, credit = self.box_type.currentIndex())
+            self.open_dialog(DebtViewWidget, modal=True,\
+                            credit=self.box_type.currentIndex())

@@ -76,6 +76,7 @@ def get_temp_filename():
     f = tempfile.NamedTemporaryFile(delete=False)
     return f.name
 
+
 def date2qdate(adate):
     ''' returns a date object from a QtCore.QDate '''
     return QtCore.QDate(adate.year, adate.month, adate.day)
