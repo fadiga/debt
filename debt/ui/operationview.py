@@ -15,7 +15,7 @@ from utils import raise_success, raise_error
 
 class OperationViewWidget(DebtWidget):
 
-    def __init__(self, debt="", parent=0, *args, **kwargs):
+    def __init__(self, debt, parent=0, *args, **kwargs):
         super(OperationViewWidget, self).__init__(parent=parent,\
                                                         *args, **kwargs)
         self.setWindowTitle((u"Add operation"))
@@ -27,7 +27,7 @@ class OperationViewWidget(DebtWidget):
 
         tablebox = QtGui.QVBoxLayout()
         tablebox.addWidget(DebtBoxTitle(u"Table opertion"))
-        self.table_op = OperationTableWidget(parent=self)
+        self.table_op = OperationTableWidget(debt, parent=self)
         tablebox.addWidget(self.table_op)
 
         self.date_ = QtGui.QDateTimeEdit(QtCore.QDate.currentDate())
@@ -84,18 +84,20 @@ class OperationViewWidget(DebtWidget):
 
 class OperationTableWidget(DebtTableWidget):
 
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, debt, parent, *args, **kwargs):
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
         self.header = [(u"Last name"), (u"First name"), \
                         (u"Start date"), (u"End date"),\
                         (u"Amount paid")]
+        self.debt = debt
         self.set_data_for()
         self.refresh(True)
 
     def set_data_for(self):
         self.data = [(op.debt.creditor.last_name, \
-                        op.debt.creditor.first_name,\
-                        op.debt.end_date.strftime(u"%d/%B/%y %H:%M"),\
-                         op.debt.start_date.strftime(u"%d/%B/%y %H:%M"),\
-                          op.amount_paid)\
-                            for op in session.query(Operation).all()]
+                    op.debt.creditor.first_name,\
+                    op.debt.end_date.strftime(u"%d/%B/%y %H:%M"),\
+                    op.debt.start_date.strftime(u"%d/%B/%y %H:%M"),\
+                    op.amount_paid) for op in session.query(Operation).\
+                    filter_by(debt=self.debt).\
+                      order_by(desc(Operation.registered_on)).all()]
