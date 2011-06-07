@@ -22,9 +22,16 @@ def alert():
     dbets = session.query(Debt).all()
     datetoday = datetime.today()
     for debt in dbets:
-        days_remaining = (debt.end_date - datetime.today()).days
-        if days_remaining <= 5:
+        days_remaining = (datetime.today() - debt.end_date).days
+        if days_remaining > - 5 and days_remaining < 0:
             list_alert.append((debt, u"%s days" % days_remaining))
+        if days_remaining == 0:
+            list_alert.append((debt, u"Today is the last days"))
+        if days_remaining > 0:
+            list_alert.append((debt, \
+                                u"Le delais est expiré il y a %s days" %\
+                                                        days_remaining))
+
     return list_alert
 
 
