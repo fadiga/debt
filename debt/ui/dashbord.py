@@ -18,18 +18,18 @@ class DashbordViewWidget(DebtWidget):
     def __init__(self, parent=0, *args, **kwargs):
         super(DashbordViewWidget, self).__init__(parent=parent,
                                                         *args, **kwargs)
-        self.title = DebtPageTitle(u"Dashbord")
+        self.title = DebtPageTitle(_(u"Dashbord"))
         self.table_debts = DebtsTableWidget(parent=self)
         self.table_alert = AlertTableWidget(parent=self)
 
         vbox = QtGui.QVBoxLayout(self)
 
         splitter_left = QtGui.QSplitter(QtCore.Qt.Vertical)
-        splitter_left.addWidget(DebtBoxTitle(u"Alters table"))
+        splitter_left.addWidget(DebtBoxTitle(_(u"Alters table")))
         splitter_left.addWidget(self.table_alert)
 
         splitter_down = QtGui.QSplitter(QtCore.Qt.Vertical)
-        splitter_down.addWidget(DebtBoxTitle(u"Debt table "))
+        splitter_down.addWidget(DebtBoxTitle(_(u"Debt table ")))
         splitter_down.addWidget(self.table_debts)
         splitter_down.resize(900, 950)
         splitter = QtGui.QSplitter(QtCore.Qt.Vertical)
@@ -46,9 +46,9 @@ class DebtsTableWidget(DebtTableWidget):
     def __init__(self, parent, *args, **kwargs):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [(u"First name"), (u"Designation"), \
-                        (u"Amount"), (u"End date"), \
-                        (u"Go")]
+        self.header = [(_(u"First name")), (_(u"Designation")), \
+                        (_(u"Amount")), (_(u"End date")), \
+                        (_(u"Go"))]
         self.set_data_for()
         self.refresh(True)
 
@@ -81,9 +81,9 @@ class AlertTableWidget(DebtTableWidget):
     def __init__(self, parent, *args, **kwargs):
 
         DebtTableWidget.__init__(self, parent=parent, *args, **kwargs)
-        self.header = [(u"Last name"), (u"First name"),\
-                        (u"Start date"), (u"Amount paid"),\
-                                    (u"Days remaining")]
+        self.header = [(_(u"Last name")), (_(u"First name")),\
+                        (_(u"Start date")), (_(u"Amount paid")),\
+                                    (_(u"Days remaining"))]
         self.set_data_for()
         self.refresh(True)
 
