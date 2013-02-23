@@ -1,7 +1,7 @@
-ANM
+DEBT
 ===
 
-ANM is a simple desktop application used to track
+DEBT is a simple desktop application used to track
 expenses on accounts credited periodicaly.
 
 It's main purpose is to be used at government agencies receiving bugets.
@@ -32,7 +32,7 @@ Requirements
 Windows
 ~~~~~~~
 
-You need a working windows environment to build ANM windows packageL
+You need a working windows environment to build DEBT windows packageL
     nsis-2.46-setup.exe
 
     pywin32-210.win32-py2.6.exe
