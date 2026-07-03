@@ -1,68 +1,43 @@
-DEBT
-===
+debt
+====
 
-DEBT is a simple desktop application used to track
-expenses on accounts credited periodicaly.
+Application bureau de **gestion des dettes, créanciers et remboursements**.
 
-It's main purpose is to be used at government agencies receiving bugets.
-It thus don't handle revenue.
+Interface graphique PyQt4 pour suivre qui vous doit de l'argent, enregistrer les paiements et visualiser les alertes sur le tableau de bord.
 
-Requirements
-~~~~~~~~~~~~
+Fonctionnalités
+---------------
 
-**PyQT4**
-    ``sudo aptitude install python-qt4``
+- Gestion des créanciers (nom, prénom, adresse, téléphone)
+- Enregistrement des dettes avec montant et dates
+- Suivi des opérations de paiement par dette
+- Tableau de bord avec alertes
+- Interface en français (gettext)
+- Packaging Windows (py2exe + NSIS)
 
-**SQLAlchemy 0.6.6 with SQLite**
-    ``pip install SQLAlchemy==0.6.6``
+Stack technique
+---------------
 
-    ``pip install pysqlite``
+- Python 2 · PyQt4
+- SQLAlchemy · SQLite
+- ReportLab · xlwt
 
-    ``sudo aptitude install sqlite3``
+Installation
+------------
 
-**ReportLab 2.4**
-    ``pip install reportlab==2.4``
+.. code-block:: bash
 
-**gettext**
-    ``sudo aptitude install gettext``
+   pip install SQLAlchemy pysqlite
+   python debt/maindebt.py
 
-**xlwt**
-    ``pip install xlwt==0.7.2``
+Build Windows
+-------------
 
-Windows
-~~~~~~~
+.. code-block:: bash
 
-You need a working windows environment to build DEBT windows packageL
-    nsis-2.46-setup.exe
+   python debt/setup-win.py py2exe
 
-    pywin32-210.win32-py2.6.exe
+Auteur
+------
 
-    py2exe-0.6.9.win32-py2.6.exe
-
-    PyQt-Py2.6-x86-gpl-4.8.3-1.exe
-
-    pysqlite-2.6.0.win32-py2.6.exe
-
-    python-2.6.6.msi (add C:\Python26 to PATH)
-
-    xlwt-0.7.2.win32.exe
-
-    reportlab-2.5.win32-py2.6.exe
-
-    setuptools-0.6c11.win32-py2.6.exe
-
-    ``easy_install SQLAlchemy==0.6.6``
-
-Once setup, create windows executable:
-    ``copy ..\resources\microsoftdll\*.dll .``
-
-    ``copy ..\resources\microsoftdll\*.man* .``
-
-    ``python.exe setup-win.py py2exe``
-
-If you want a single executable (everything inside ; faster):
-
-    ``set PY2EXEMODE=single ; python.exe setup-win.py py2exe``
-
-Once windows binary is complete, create installer with:
-    ``makensis.exe installer.nsi``
+`Ibrahima Fadiga <https://github.com/fadiga>`_ — Bamako, Mali
